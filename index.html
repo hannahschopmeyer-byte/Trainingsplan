@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>HM Trainingsplan 2026</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,sans-serif;background:#0D0F14;color:#E8EAF0;min-height:100vh;max-width:480px;margin:0 auto;padding-bottom:72px}
+.hero{background:linear-gradient(160deg,#1A1030 0%,#0D0F14 60%);padding:44px 20px 24px;border-bottom:1px solid #2A2F3F}
+.hero-label{font-size:10px;letter-spacing:3px;color:#A78BFA;text-transform:uppercase;margin-bottom:8px}
+.hero-title{font-size:26px;font-weight:800;line-height:1.2;margin-bottom:4px}
+.hero-sub{font-size:11px;color:#6B7280;margin-bottom:16px}
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.stat{background:#161921;border:1px solid #2A2F3F;border-radius:10px;padding:10px 8px;text-align:center}
+.stat-v{font-size:18px;font-weight:800;color:#A78BFA;display:block}
+.stat-l{font-size:8px;color:#6B7280;margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
+.prog-wrap{padding:12px 20px;background:#161921;border-bottom:1px solid #2A2F3F}
+.prog-row{display:flex;justify-content:space-between;margin-bottom:6px}
+.prog-label{font-size:9px;color:#6B7280;text-transform:uppercase;letter-spacing:1px}
+.prog-val{font-size:9px;color:#A78BFA}
+.prog-bar{height:4px;background:#2A2F3F;border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,#A78BFA,#60A5FA);border-radius:2px;width:0;transition:width 1s ease}
+.tabnav{display:flex;overflow-x:auto;scrollbar-width:none;background:#161921;border-bottom:1px solid #2A2F3F;padding:0 8px;gap:4px;position:sticky;top:0;z-index:100}
+.tabnav::-webkit-scrollbar{display:none}
+.tbtn{flex-shrink:0;padding:11px 12px;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#6B7280;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;font-family:inherit}
+.tbtn.on{color:#A78BFA;border-bottom-color:#A78BFA}
+.sec{display:none;padding:12px 14px}
+.sec.on{display:block}
+.sec-title{font-size:18px;font-weight:800;margin-bottom:4px}
+.sec-sub{font-size:10px;color:#6B7280;margin-bottom:14px;line-height:1.5}
+.phase-hdr{border-radius:6px;padding:7px 12px;margin:14px 0 8px;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+.ph1{background:#1A3A28;color:#4ADE80}.ph2{background:#1A2A3F;color:#60A5FA}.ph3{background:#3A2010;color:#FB923C}.ph4{background:#3A1520;color:#F87171}
+.wcard{background:#161921;border:1px solid #2A2F3F;border-radius:12px;margin-bottom:10px;overflow:hidden}
+.wcard.reduce{border-color:#FBBF24}.wcard.race{border-color:#A78BFA}
+.wcard-hdr{display:flex;align-items:center;padding:12px 14px;gap:10px;cursor:pointer}
+.wbadge{font-weight:800;font-size:11px;width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bg1{background:#1A3A28;color:#4ADE80}.bg2{background:#1A2A3F;color:#60A5FA}.bg3{background:#3A2010;color:#FB923C}.bg4{background:#3A1520;color:#F87171}
+.bgr{background:#2A2200;color:#FBBF24}.bgrace{background:#2A1F45;color:#A78BFA}
+.winfo{flex:1}
+.wtitle{font-size:13px;font-weight:700}
+.wmeta{font-size:10px;color:#6B7280;margin-top:2px}
+.wkm{font-size:14px;font-weight:700;color:#A78BFA;text-align:right}
+.wkm small{display:block;font-size:8px;color:#6B7280;font-weight:400}
+.wchev{color:#6B7280;font-size:9px;margin-left:4px;transition:transform .2s;display:inline-block}
+.wcard.open .wchev{transform:rotate(180deg)}
+.wbody{display:none;padding:0 14px 14px;border-top:1px solid #2A2F3F}
+.wcard.open .wbody{display:block}
+.rday{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid #2A2F3F}
+.rday:last-of-type{border-bottom:none}
+.rdot{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.rdot-g{background:#4ADE80}.rdot-b{background:#60A5FA}.rdot-o{background:#FB923C}.rdot-p{background:#A78BFA}.rdot-y{background:#FBBF24}
+.rday-lbl{font-size:9px;color:#6B7280;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
+.rday-desc{font-size:12px;color:#E8EAF0;font-weight:500}
+.tbadge{display:inline-block;font-size:8px;padding:1px 6px;border-radius:3px;font-weight:500;margin-left:5px;vertical-align:middle;text-transform:uppercase;letter-spacing:.5px}
+.ter{background:#1A3A28;color:#4ADE80}.tll{background:#1A2A3F;color:#60A5FA}.tst{background:#2A1F45;color:#A78BFA}.tlt{background:#3A2010;color:#FB923C}.tltq{background:#2A2000;color:#FBBF24}.trc{background:#2A1F45;color:#A78BFA}
+.whint{margin-top:10px;padding:8px 10px;background:#1E2230;border-left:2px solid #A78BFA;border-radius:0 6px 6px 0;font-size:10px;color:#9CA3AF;line-height:1.6}
+.rtag{font-size:8px;background:#2A2200;color:#FBBF24;padding:2px 6px;border-radius:4px;margin-left:6px;text-transform:uppercase;letter-spacing:.5px}
+.racetag{font-size:8px;background:#2A1F45;color:#A78BFA;padding:2px 6px;border-radius:4px;margin-left:6px}
+.card{background:#161921;border:1px solid #2A2F3F;border-radius:12px;padding:14px;margin-bottom:10px}
+.card-title{font-size:13px;font-weight:700;margin-bottom:4px}
+.card-sub{font-size:10px;color:#6B7280;margin-bottom:12px;line-height:1.5}
+.urow{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid #2A2F3F}
+.urow:last-child{border-bottom:none}
+.uicon{font-size:18px;width:28px;text-align:center;flex-shrink:0}
+.uname{font-size:12px;font-weight:600}
+.usets{font-size:10px;color:#A78BFA;margin-top:2px}
+.uziel{font-size:9px;color:#6B7280;margin-top:2px}
+.uwann{margin-left:auto;font-size:8px;padding:2px 7px;border-radius:10px;background:#1E2230;color:#6B7280;border:1px solid #2A2F3F;white-space:nowrap;flex-shrink:0}
+.dayrow{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #2A2F3F}
+.dayrow:last-child{border-bottom:none}
+.dayn{font-size:11px;font-weight:700;width:28px;flex-shrink:0;color:#6B7280;padding-top:1px;text-transform:uppercase;letter-spacing:.5px}
+.dayn.run{color:#4ADE80}
+.dayact{font-size:12px;font-weight:600}
+.daydet{font-size:10px;color:#6B7280;margin-top:2px;line-height:1.5}
+.ltcard{background:#161921;border:1px solid #2A2F3F;border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;gap:12px}
+.ltbadge{font-weight:800;font-size:13px;width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.lt-er{background:#1A3A28;color:#4ADE80}.lt-ll{background:#1A2A3F;color:#60A5FA}.lt-st{background:#2A1F45;color:#A78BFA}.lt-lt{background:#3A2010;color:#FB923C}
+.ltname{font-size:12px;font-weight:700}
+.ltint{font-size:9px;color:#A78BFA;margin:3px 0}
+.ltdesc{font-size:10px;color:#6B7280;line-height:1.55}
+.scard{border-radius:12px;padding:14px;margin-bottom:10px;border:1px solid}
+.sok{background:#1A3A28;border-color:#4ADE80}.swarn{background:#2A2200;border-color:#FBBF24}.sstop{background:#3A1515;border-color:#F87171}.sinfo{background:#1A2A3F;border-color:#60A5FA}
+.slevel{font-size:15px;font-weight:800;margin-bottom:6px}
+.sok .slevel{color:#4ADE80}.swarn .slevel{color:#FBBF24}.sstop .slevel{color:#F87171}.sinfo .slevel{color:#60A5FA}
+.stext{font-size:11px;color:#E8EAF0;line-height:1.65;white-space:pre-line}
+.botnav{position:fixed;bottom:0;left:0;right:0;background:#161921;border-top:1px solid #2A2F3F;display:flex;justify-content:space-around;padding:8px 0 14px;z-index:200;max-width:480px;margin:0 auto}
+.bnbtn{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;cursor:pointer;padding:4px 12px;color:#6B7280;transition:color .2s;font-family:inherit}
+.bnbtn.on{color:#A78BFA}
+.bnicon{font-size:18px;line-height:1}
+.bnlbl{font-size:8px;letter-spacing:.5px;text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-label">🏃 Kölner Brückenlauf 2026</div>
+  <div class="hero-title">Halbmarathon<br>Trainingsplan</div>
+  <div class="hero-sub">26. Mai → 13. September · 16 Wochen</div>
+  <div class="stats">
+    <div class="stat"><span class="stat-v">16</span><span class="stat-l">Wochen</span></div>
+    <div class="stat"><span class="stat-v" id="wleft">–</span><span class="stat-l">Verbleibend</span></div>
+    <div class="stat"><span class="stat-v">🎯</span><span class="stat-l">Finish!</span></div>
+  </div>
+</div>
+
+<div class="prog-wrap">
+  <div class="prog-row"><span class="prog-label">Trainingsfortschritt</span><span class="prog-val" id="ppct">0%</span></div>
+  <div class="prog-bar"><div class="prog-fill" id="pbar"></div></div>
+</div>
+
+<div class="tabnav">
+  <button class="tbtn on" onclick="show('plan',this)">Plan</button>
+  <button class="tbtn" onclick="show('uebungen',this)">Übungen</button>
+  <button class="tbtn" onclick="show('schema',this)">Schema</button>
+  <button class="tbtn" onclick="show('typen',this)">Lauftypen</button>
+  <button class="tbtn" onclick="show('schmerz',this)">Schmerz</button>
+</div>
+
+<!-- PLAN -->
+<div id="plan" class="sec on">
+  <p style="font-size:9px;color:#6B7280;margin-bottom:8px">Tippe auf eine Woche für Details →</p>
+
+  <div class="phase-hdr ph1">● Phase 1 – Sanfter Wiedereinstieg</div>
+
+  <div class="wcard" onclick="tog(this)">
+    <div class="wcard-hdr"><div class="wbadge bg1">W1</div><div class="winfo"><div class="wtitle">KW 22</div><div class="wmeta">26.–30. Mai 2026</div></div><div class="wkm">10 km<small>diese Woche</small></div><span class="wchev">▼</span></div>
+    <div class="wbody">
+      <div class="rday"><span class="rdot rdot-g"></span><div><div class="rday-lbl">Donnerstag</div><div class="rday-desc">Easy Run 3 km <span class="tbadge ter">ER</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-g"></span><div><div class="rday-lbl">Samstag</div><div class="rday-desc">Easy Run 4 km <span class="tbadge ter">ER</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-g"></span><div><div class="rday-lbl">Sonntag</div><div class="rday-desc">Easy Run 3 km <span class="tbadge ter">ER</span></div></div></div>
+      <div class="whint">Erster Lauf nach Pause. Sehr locker, Körper testen. Schmerz-Check nach jedem Lauf (0–10).</div>
+    </div>
+  </div>
+
+  <div class="wcard" onclick="tog(this)">
+    <div class="wcard-hdr"><div class="wbadge bg1">W2</div><div class="winfo"><div class="wtitle">KW 23</div><div class="wmeta">2.–6. Juni 2026</div></div><div class="wkm">11 km<small>diese Woche</small></div><span class="wchev">▼</span></div>
+    <div class="wbody">
+      <div class="rday"><span class="rdot rdot-g"></span><div><div class="rday-lbl">Donnerstag</div><div class="rday-desc">Easy Run 3 km <span class="tbadge ter">ER</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-g"></span><div><div class="rday-lbl">Samstag</div><div class="rday-desc">Easy Run 4 km <span class="tbadge ter">ER</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-g"></span><div><div class="rday-lbl">Sonntag</div><div class="rday-desc">Easy Run 4 km <span class="tbadge ter">ER</span></div></div></div>
+      <div class="whint">Wenn Woche 1 komplett schmerzfrei war: +1 km möglich. Sonst Plan halten.</div>
+    </div>
+  </div>
+
+  <div class="wcard" onclick="tog(this)">
+    <div class="wcard-hdr"><div class="wbadge bg1">W3</div><div class="winfo"><div class="wtitle">KW 24</div><div class="wmeta">9.–13. Juni 2026</div></div><div class="wkm">13 km<small>diese Woche</small></div><span class="wchev">▼</span></div>
+    <div class="wbody">
+      <div class="rday"><span class="rdot rdot-g"></span><div><div class="rday-lbl">Donnerstag</div><div class="rday-desc">Easy Run 4 km <span class="tbadge ter">ER</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-g"></span><div><div class="rday-lbl">Samstag</div><div class="rday-desc">Easy Run 5 km <span class="tbadge ter">ER</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-g"></span><div><div class="rday-lbl">Sonntag</div><div class="rday-desc">Easy Run 4 km <span class="tbadge ter">ER</span></div></div></div>
+      <div class="whint">Erste Woche mit 13 km – nahe am alten Niveau. Weiter sehr lockeres Tempo.</div>
+    </div>
+  </div>
+
+  <div class="wcard reduce" onclick="tog(this)">
+    <div class="wcard-hdr"><div class="wbadge bgr">W4</div><div class="winfo"><div class="wtitle">KW 25 <span class="rtag">⚡ Reduktion</span></div><div class="wmeta">16.–20. Juni 2026</div></div><div class="wkm">10 km<small>diese Woche</small></div><span class="wchev">▼</span></div>
+    <div class="wbody">
+      <div class="rday"><span class="rdot rdot-y"></span><div><div class="rday-lbl">Donnerstag</div><div class="rday-desc">Easy Run 3 km <span class="tbadge ter">ER</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-y"></span><div><div class="rday-lbl">Samstag</div><div class="rday-desc">Easy Run 4 km <span class="tbadge ter">ER</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-y"></span><div><div class="rday-lbl">Sonntag</div><div class="rday-desc">Easy Run 3 km <span class="tbadge ter">ER</span></div></div></div>
+      <div class="whint">⚡ REDUKTIONSWOCHE – bewusst weniger. Mehr dehnen & Kraft. Erholung ist Training.</div>
+    </div>
+  </div>
+
+  <div class="phase-hdr ph2">● Phase 2 – Aufbau & Stabilisierung</div>
+
+  <div class="wcard" onclick="tog(this)">
+    <div class="wcard-hdr"><div class="wbadge bg2">W5</div><div class="winfo"><div class="wtitle">KW 26</div><div class="wmeta">23.–27. Juni 2026</div></div><div class="wkm">14 km<small>diese Woche</small></div><span class="wchev">▼</span></div>
+    <div class="wbody">
+      <div class="rday"><span class="rdot rdot-b"></span><div><div class="rday-lbl">Donnerstag</div><div class="rday-desc">Easy Run 4 km <span class="tbadge ter">ER</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-b"></span><div><div class="rday-lbl">Samstag</div><div class="rday-desc">Easy Run 5 km <span class="tbadge ter">ER</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-b"></span><div><div class="rday-lbl">Sonntag</div><div class="rday-desc">Langer Lauf 5 km <span class="tbadge tll">LL</span></div></div></div>
+      <div class="whint">Erster Langer Lauf. Strides nur wenn mind. 2 Wochen komplett schmerzfrei.</div>
+    </div>
+  </div>
+
+  <div class="wcard" onclick="tog(this)">
+    <div class="wcard-hdr"><div class="wbadge bg2">W6</div><div class="winfo"><div class="wtitle">KW 27</div><div class="wmeta">30. Jun – 4. Jul 2026</div></div><div class="wkm">15 km<small>diese Woche</small></div><span class="wchev">▼</span></div>
+    <div class="wbody">
+      <div class="rday"><span class="rdot rdot-p"></span><div><div class="rday-lbl">Donnerstag</div><div class="rday-desc">Easy Run 4 km + Strides <span class="tbadge tst">ST</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-b"></span><div><div class="rday-lbl">Samstag</div><div class="rday-desc">Easy Run 5 km <span class="tbadge ter">ER</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-b"></span><div><div class="rday-lbl">Sonntag</div><div class="rday-desc">Langer Lauf 6 km <span class="tbadge tll">LL</span></div></div></div>
+      <div class="whint">Strides = 4–6×20 Sek Beschleunigung am Ende des Do-Laufs. Kein Sprint – kontrolliert.</div>
+    </div>
+  </div>
+
+  <div class="wcard" onclick="tog(this)">
+    <div class="wcard-hdr"><div class="wbadge bg2">W7</div><div class="winfo"><div class="wtitle">KW 28</div><div class="wmeta">7.–11. Juli 2026</div></div><div class="wkm">18 km<small>diese Woche</small></div><span class="wchev">▼</span></div>
+    <div class="wbody">
+      <div class="rday"><span class="rdot rdot-p"></span><div><div class="rday-lbl">Donnerstag</div><div class="rday-desc">Easy Run 5 km + Strides <span class="tbadge tst">ST</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-b"></span><div><div class="rday-lbl">Samstag</div><div class="rday-desc">Easy Run 6 km <span class="tbadge ter">ER</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-b"></span><div><div class="rday-lbl">Sonntag</div><div class="rday-desc">Langer Lauf 7 km <span class="tbadge tll">LL</span></div></div></div>
+      <div class="whint">7 km Langer Lauf – neues Territorium! Tempo nicht erhöhen, auch wenn es leicht fühlt.</div>
+    </div>
+  </div>
+
+  <div class="wcard reduce" onclick="tog(this)">
+    <div class="wcard-hdr"><div class="wbadge bgr">W8</div><div class="winfo"><div class="wtitle">KW 29 <span class="rtag">⚡ Reduktion</span></div><div class="wmeta">14.–18. Juli 2026</div></div><div class="wkm">14 km<small>diese Woche</small></div><span class="wchev">▼</span></div>
+    <div class="wbody">
+      <div class="rday"><span class="rdot rdot-y"></span><div><div class="rday-lbl">Donnerstag</div><div class="rday-desc">Easy Run 4 km <span class="tbadge ter">ER</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-y"></span><div><div class="rday-lbl">Samstag</div><div class="rday-desc">Easy Run 5 km <span class="tbadge ter">ER</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-y"></span><div><div class="rday-lbl">Sonntag</div><div class="rday-desc">Langer Lauf 5 km <span class="tbadge tll">LL</span></div></div></div>
+      <div class="whint">⚡ REDUKTIONSWOCHE – Kraft & Dehnung betonen. Clamshells & Tibialis-Raises täglich.</div>
+    </div>
+  </div>
+
+  <div class="phase-hdr ph3">● Phase 3 – Halbmarathon-Basis</div>
+
+  <div class="wcard" onclick="tog(this)">
+    <div class="wcard-hdr"><div class="wbadge bg3">W9</div><div class="winfo"><div class="wtitle">KW 30</div><div class="wmeta">21.–25. Juli 2026</div></div><div class="wkm">19 km<small>diese Woche</small></div><span class="wchev">▼</span></div>
+    <div class="wbody">
+      <div class="rday"><span class="rdot rdot-p"></span><div><div class="rday-lbl">Donnerstag</div><div class="rday-desc">Easy Run 5 km + Strides <span class="tbadge tst">ST</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-o"></span><div><div class="rday-lbl">Samstag</div><div class="rday-desc">Easy Run 6 km <span class="tbadge ter">ER</span> <span class="tbadge tltq">LT wenn 4 Wo. schmerzfrei</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-o"></span><div><div class="rday-lbl">Sonntag</div><div class="rday-desc">Langer Lauf 8 km <span class="tbadge tll">LL</span></div></div></div>
+      <div class="whint">LT-Läufe erst einführen wenn mind. 4 Wochen komplett schmerzfrei! Sonst bleibt Sa Easy Run.</div>
+    </div>
+  </div>
+
+  <div class="wcard" onclick="tog(this)">
+    <div class="wcard-hdr"><div class="wbadge bg3">W10</div><div class="winfo"><div class="wtitle">KW 31</div><div class="wmeta">28. Jul – 1. Aug 2026</div></div><div class="wkm">20 km<small>diese Woche</small></div><span class="wchev">▼</span></div>
+    <div class="wbody">
+      <div class="rday"><span class="rdot rdot-p"></span><div><div class="rday-lbl">Donnerstag</div><div class="rday-desc">Easy Run 5 km + Strides <span class="tbadge tst">ST</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-o"></span><div><div class="rday-lbl">Samstag</div><div class="rday-desc">LT-Lauf 6 km <span class="tbadge tlt">LT</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-o"></span><div><div class="rday-lbl">Sonntag</div><div class="rday-desc">Langer Lauf 9 km <span class="tbadge tll">LL</span></div></div></div>
+      <div class="whint">LT Sa: 10 min einspielen → 20 min LT-Tempo → 10 min auslaufen. Kein Renntempo.</div>
+    </div>
+  </div>
+
+  <div class="wcard" onclick="tog(this)">
+    <div class="wcard-hdr"><div class="wbadge bg3">W11</div><div class="winfo"><div class="wtitle">KW 32</div><div class="wmeta">4.–8. August 2026</div></div><div class="wkm">24 km<small>diese Woche</small></div><span class="wchev">▼</span></div>
+    <div class="wbody">
+      <div class="rday"><span class="rdot rdot-p"></span><div><div class="rday-lbl">Donnerstag</div><div class="rday-desc">Easy Run 6 km + Strides <span class="tbadge tst">ST</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-o"></span><div><div class="rday-lbl">Samstag</div><div class="rday-desc">LT-Lauf 7 km <span class="tbadge tlt">LT</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-o"></span><div><div class="rday-lbl">Sonntag</div><div class="rday-desc">Langer Lauf 11 km <span class="tbadge tll">LL</span></div></div></div>
+      <div class="whint">Erster Lauf über 10 km! Sehr wichtig: Tempo locker halten. Trinken nicht vergessen.</div>
+    </div>
+  </div>
+
+  <div class="wcard reduce" onclick="tog(this)">
+    <div class="wcard-hdr"><div class="wbadge bgr">W12</div><div class="winfo"><div class="wtitle">KW 33 <span class="rtag">⚡ Reduktion</span></div><div class="wmeta">11.–15. August 2026</div></div><div class="wkm">18 km<small>diese Woche</small></div><span class="wchev">▼</span></div>
+    <div class="wbody">
+      <div class="rday"><span class="rdot rdot-y"></span><div><div class="rday-lbl">Donnerstag</div><div class="rday-desc">Easy Run 5 km <span class="tbadge ter">ER</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-y"></span><div><div class="rday-lbl">Samstag</div><div class="rday-desc">Easy Run 5 km <span class="tbadge ter">ER</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-y"></span><div><div class="rday-lbl">Sonntag</div><div class="rday-desc">Langer Lauf 8 km <span class="tbadge tll">LL</span></div></div></div>
+      <div class="whint">⚡ Wichtigste Reduktionswoche vor dem Endspurt. Keine Experimente.</div>
+    </div>
+  </div>
+
+  <div class="phase-hdr ph4">● Phase 4 – Spezifisch & Tapering</div>
+
+  <div class="wcard" onclick="tog(this)">
+    <div class="wcard-hdr"><div class="wbadge bg4">W13</div><div class="winfo"><div class="wtitle">KW 34 <span class="tbadge tlt">Peak</span></div><div class="wmeta">18.–22. August 2026</div></div><div class="wkm">26 km<small>diese Woche</small></div><span class="wchev">▼</span></div>
+    <div class="wbody">
+      <div class="rday"><span class="rdot rdot-p"></span><div><div class="rday-lbl">Donnerstag</div><div class="rday-desc">Easy Run 6 km + Strides <span class="tbadge tst">ST</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-o"></span><div><div class="rday-lbl">Samstag</div><div class="rday-desc">LT-Lauf 7 km <span class="tbadge tlt">LT</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-o"></span><div><div class="rday-lbl">Sonntag</div><div class="rday-desc">Langer Lauf 13 km <span class="tbadge tll">LL</span></div></div></div>
+      <div class="whint">🏔️ PEAK-WOCHE! Längster Lauf im gesamten Plan. Danach beginnt das Tapering.</div>
+    </div>
+  </div>
+
+  <div class="wcard" onclick="tog(this)">
+    <div class="wcard-hdr"><div class="wbadge bg4">W14</div><div class="winfo"><div class="wtitle">KW 35 – Tapering</div><div class="wmeta">25.–29. August 2026</div></div><div class="wkm">22 km<small>diese Woche</small></div><span class="wchev">▼</span></div>
+    <div class="wbody">
+      <div class="rday"><span class="rdot rdot-p"></span><div><div class="rday-lbl">Donnerstag</div><div class="rday-desc">Easy Run 5 km + Strides <span class="tbadge tst">ST</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-o"></span><div><div class="rday-lbl">Samstag</div><div class="rday-desc">LT-Lauf 6 km <span class="tbadge tlt">LT</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-o"></span><div><div class="rday-lbl">Sonntag</div><div class="rday-desc">Langer Lauf 11 km <span class="tbadge tll">LL</span></div></div></div>
+      <div class="whint">Tapering –15%. Qualität wichtiger als Quantität. Das "zu wenig"-Gefühl ist normal.</div>
+    </div>
+  </div>
+
+  <div class="wcard" onclick="tog(this)">
+    <div class="wcard-hdr"><div class="wbadge bg4">W15</div><div class="winfo"><div class="wtitle">KW 36 – Tapering</div><div class="wmeta">1.–5. September 2026</div></div><div class="wkm">17 km<small>diese Woche</small></div><span class="wchev">▼</span></div>
+    <div class="wbody">
+      <div class="rday"><span class="rdot rdot-p"></span><div><div class="rday-lbl">Donnerstag</div><div class="rday-desc">Easy Run 4 km <span class="tbadge ter">ER</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-p"></span><div><div class="rday-lbl">Samstag</div><div class="rday-desc">Easy Run 5 km <span class="tbadge ter">ER</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-p"></span><div><div class="rday-lbl">Sonntag</div><div class="rday-desc">Langer Lauf 8 km <span class="tbadge tll">LL</span></div></div></div>
+      <div class="whint">Tapering –20%. Beine frisch halten. Viel schlafen. Nicht mehr "nachholen".</div>
+    </div>
+  </div>
+
+  <div class="wcard race" onclick="tog(this)">
+    <div class="wcard-hdr"><div class="wbadge bgrace">🏁</div><div class="winfo"><div class="wtitle">KW 37 <span class="racetag">🏁 Rennen</span></div><div class="wmeta">8.–13. September 2026</div></div><div class="wkm" style="color:#4ADE80">21,1 km<small>Halbmarathon</small></div><span class="wchev">▼</span></div>
+    <div class="wbody">
+      <div class="rday"><span class="rdot rdot-p"></span><div><div class="rday-lbl">Donnerstag</div><div class="rday-desc">Lockerer Lauf 3 km <span class="tbadge ter">ER</span></div></div></div>
+      <div class="rday"><span class="rdot rdot-p"></span><div><div class="rday-lbl">Samstag</div><div class="rday-desc">Einlaufen 3 km</div></div></div>
+      <div class="rday"><span class="rdot" style="background:#4ADE80;width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0"></span><div><div class="rday-lbl">Sonntag, 13. Sep</div><div class="rday-desc">🏁 Kölner Brückenlauf!</div></div></div>
+      <div class="whint" style="border-left-color:#4ADE80">🎉 Du hast 16 Wochen trainiert. Genieß jeden Kilometer. Ziel: ins Ziel kommen – schmerzfrei und stolz!</div>
+    </div>
+  </div>
+</div>
+
+<!-- ÜBUNGEN -->
+<div id="uebungen" class="sec">
+  <div class="sec-title">Übungen</div>
+  <div class="sec-sub">Gezielt gegen Knieschmerzen, Shin Splints & Hüftschwäche. Genauso wichtig wie das Laufen.</div>
+  <div class="card">
+    <div class="card-title">🦵 Knie & Hüfte</div>
+    <div class="card-sub">Für Kniescheibenschmerzen (vorne/außen). Stärkt Hüftabduktoren & Knie-Tracking.</div>
+    <div class="urow"><div class="uicon">🔄</div><div style="flex:1"><div class="uname">Clamshells mit Band</div><div class="usets">3 × 15 Wdhl / Seite</div><div class="uziel">Hüftabduktoren → Knie-Tracking</div></div><span class="uwann">täglich</span></div>
+    <div class="urow"><div class="uicon">🦵</div><div style="flex:1"><div class="uname">Einbeinige Kniebeuge</div><div class="usets">3 × 8 Wdhl / Seite (Stuhl als Hilfe)</div><div class="uziel">Gesäß, Kniestabilität</div></div><span class="uwann">Mo / Mi</span></div>
+    <div class="urow"><div class="uicon">🌉</div><div style="flex:1"><div class="uname">Hüftbrücke einbeinig</div><div class="usets">3 × 12 Wdhl / Seite</div><div class="uziel">Gesäß, Hüftstabilität</div></div><span class="uwann">Mo / Mi</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title">🦴 Shin Splints</div>
+    <div class="card-sub">Stärkt den Tibialis anterior (Schienbeinkante vorne). Wichtigste Übung gegen Shin Splints.</div>
+    <div class="urow"><div class="uicon">⬆️</div><div style="flex:1"><div class="uname">Tibialis-Raises</div><div class="usets">3 × 20 Wdhl (Fersen an Wand, Zehen heben)</div><div class="uziel">Tibialis anterior → Shin Splints</div></div><span class="uwann">täglich</span></div>
+    <div class="urow"><div class="uicon">🦶</div><div style="flex:1"><div class="uname">Fußgewölbeübung</div><div class="usets">2 × 30 Sek (Towel Scrunches)</div><div class="uziel">Fußstabilität</div></div><span class="uwann">täglich</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title">🧘 Dehnung & Foam Rolling</div>
+    <div class="card-sub">Nach dem Lauf – nie davor.</div>
+    <div class="urow"><div class="uicon">🌀</div><div style="flex:1"><div class="uname">IT-Band Foam Rolling</div><div class="usets">2 Min / Seite (Außenseite Oberschenkel)</div><div class="uziel">Knieschmerz außen</div></div><span class="uwann">nach Lauf</span></div>
+    <div class="urow"><div class="uicon">📐</div><div style="flex:1"><div class="uname">Wadendehnung an Treppe</div><div class="usets">3 × 45 Sek / Seite (gerade + gebeugt)</div><div class="uziel">Wadenfaszien, Achillessehne</div></div><span class="uwann">nach Lauf</span></div>
+  </div>
+  <div style="padding:10px 12px;background:#2A1F45;border:1px solid #A78BFA;border-radius:10px;font-size:10px;color:#E8EAF0;line-height:1.6">
+    💡 <strong>Kraft A (Mi) & Kraft B (Fr)</strong> aus deinen bestehenden Plänen weiterführen.
+  </div>
+</div>
+
+<!-- SCHEMA -->
+<div id="schema" class="sec">
+  <div class="sec-title">Wochenschema</div>
+  <div class="sec-sub">So sieht eine typische Trainingswoche aus.</div>
+  <div class="card">
+    <div class="dayrow"><div class="dayn">Mo</div><div><div class="dayact">Aktive Erholung</div><div class="daydet">Spaziergang 20–30 Min · Fußübungen · Tibialis-Raises</div></div></div>
+    <div class="dayrow"><div class="dayn">Di</div><div><div class="dayact">Kraft A</div><div class="daydet">Beine & Core · Bestehender Kraftplan</div></div></div>
+    <div class="dayrow"><div class="dayn">Mi</div><div><div class="dayact">Mobilität + Foam Rolling</div><div class="daydet">IT-Band · Waden dehnen · Hüftmobilität · 15–20 Min</div></div></div>
+    <div class="dayrow"><div class="dayn run">Do</div><div><div class="dayact" style="color:#4ADE80">🏃 LAUFEN</div><div class="daydet">Laut Wochenplan · Easy Run oder ER + Strides</div></div></div>
+    <div class="dayrow"><div class="dayn">Fr</div><div><div class="dayact">Kraft B</div><div class="daydet">Hüfte & Stabilität · Clamshells · Hüftbrücke</div></div></div>
+    <div class="dayrow"><div class="dayn run">Sa</div><div><div class="dayact" style="color:#4ADE80">🏃 LAUFEN</div><div class="daydet">Laut Wochenplan · ER, LT oder leichter Lauf</div></div></div>
+    <div class="dayrow"><div class="dayn run">So</div><div><div class="dayact" style="color:#4ADE80">🏃 LANGER LAUF</div><div class="daydet">Immer locker! Nie unter Zeitdruck.</div></div></div>
+  </div>
+</div>
+
+<!-- LAUFTYPEN -->
+<div id="typen" class="sec">
+  <div class="sec-title">Lauftypen</div>
+  <div class="sec-sub">Was bedeuten die Abkürzungen im Plan?</div>
+  <div class="ltcard"><div class="ltbadge lt-er">ER</div><div><div class="ltname">Easy Run</div><div class="ltint">Gesprächtempo · ~65–70% HFmax</div><div class="ltdesc">Du kannst dich problemlos unterhalten. Der wichtigste Lauf überhaupt. Auch wenn es sich zu langsam anfühlt – genau das ist richtig.</div></div></div>
+  <div class="ltcard"><div class="ltbadge lt-ll">LL</div><div><div class="ltname">Langer Lauf</div><div class="ltint">Wie Easy Run · nie schneller</div><div class="ltdesc">Wöchentlich längster Lauf. Baut aerobe Basis auf. Auch wenn es sich leicht anfühlt – Tempo halten!</div></div></div>
+  <div class="ltcard"><div class="ltbadge lt-st">ST</div><div><div class="ltname">Strides</div><div class="ltint">4–6 × 20 Sek Beschleunigung · ~80% Effort</div><div class="ltdesc">Am Ende eines Easy Runs kurz aufdrehen, dann 40 Sek gehen. Kein Sprint – kontrolliert. Erst ab KW 26 und nur wenn schmerzfrei.</div></div></div>
+  <div class="ltcard"><div class="ltbadge lt-lt">LT</div><div><div class="ltname">Laktatschwelle</div><div class="ltint">Komfortabel-hart · ~80–85% HFmax</div><div class="ltdesc">Erst ab Phase 3 (KW 30), wenn mind. 4 Wochen schmerzfrei. 10 min einlaufen → 20 min LT-Tempo → 10 min auslaufen.</div></div></div>
+</div>
+
+<!-- SCHMERZ -->
+<div id="schmerz" class="sec">
+  <div class="sec-title">Schmerzregeln</div>
+  <div class="sec-sub">Schmerzfreiheit hat immer Vorrang vor Kilometern.</div>
+  <div class="scard sok"><div class="slevel">0–2 / 10 ✓</div><div class="stext">Kein bis minimaler Schmerz. Normal weiter laufen. Übungen nach dem Lauf durchführen.</div></div>
+  <div class="scard swarn"><div class="slevel">3 / 10 ⚠️</div><div class="stext">Merklicher Schmerz. Tempo sofort reduzieren, auf Gehen wechseln. Lauf abbrechen wenn es nicht besser wird.
+
+Am nächsten Tag: nur Übungen, kein Laufen.</div></div>
+  <div class="scard sstop"><div class="slevel">4+ / 10 🛑</div><div class="stext">Sofort abbrechen. 2–3 Tage Pause. Wenn nach 3 Tagen nicht deutlich besser: Arzt aufsuchen.
+
+Keine Schmerzmittel zum Weiterlaufen!</div></div>
+  <div class="scard swarn"><div class="slevel">Schmerz zwischen Läufen</div><div class="stext">Solange der Schmerz nicht auf 0–1/10 abklingt: Woche wiederholen, nicht steigern. Lauf kann durch Rad oder Schwimmen ersetzt werden.</div></div>
+  <div class="scard sinfo"><div class="slevel">⚕️ Arzt aufsuchen</div><div class="stext">Falls die tiefen Wadenschmerzen links wiederkehren: Orthopäden aufsuchen – könnte Tibialis-posterior-Problem sein.</div></div>
+</div>
+
+<div class="botnav">
+  <button class="bnbtn on" id="bn-plan" onclick="showBot('plan',this)"><span class="bnicon">📅</span><span class="bnlbl">Plan</span></button>
+  <button class="bnbtn" id="bn-uebungen" onclick="showBot('uebungen',this)"><span class="bnicon">💪</span><span class="bnlbl">Übungen</span></button>
+  <button class="bnbtn" id="bn-schema" onclick="showBot('schema',this)"><span class="bnicon">🗓</span><span class="bnlbl">Schema</span></button>
+  <button class="bnbtn" id="bn-typen" onclick="showBot('typen',this)"><span class="bnicon">🏃</span><span class="bnlbl">Typen</span></button>
+  <button class="bnbtn" id="bn-schmerz" onclick="showBot('schmerz',this)"><span class="bnicon">🩺</span><span class="bnlbl">Schmerz</span></button>
+</div>
+
+<script>
+function show(id, btn) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('on'));
+  document.querySelectorAll('.tbtn').forEach(b => b.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  btn.classList.add('on');
+  document.getElementById('bn-' + id).classList.add('on');
+  document.querySelectorAll('.bnbtn').forEach(b => { if(b.id !== 'bn-'+id) b.classList.remove('on'); });
+  window.scrollTo(0,0);
+}
+function showBot(id, btn) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('on'));
+  document.querySelectorAll('.bnbtn').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('.tbtn').forEach(b => b.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  btn.classList.add('on');
+  const tabs = ['plan','uebungen','schema','typen','schmerz'];
+  const i = tabs.indexOf(id);
+  document.querySelectorAll('.tbtn')[i].classList.add('on');
+  window.scrollTo(0,0);
+}
+function tog(card) { card.classList.toggle('open'); }
+(function(){
+  const start = new Date('2026-05-26'), end = new Date('2026-09-13'), now = new Date();
+  const pct = Math.max(0, Math.min(100, Math.round((now-start)/(end-start)*100)));
+  const wl = Math.max(0, Math.ceil((end-now)/(7*24*60*60*1000)));
+  document.getElementById('ppct').textContent = pct + '%';
+  document.getElementById('wleft').textContent = wl;
+  setTimeout(() => { document.getElementById('pbar').style.width = pct + '%'; }, 400);
+})();
+</script>
+</body>
+</html>
